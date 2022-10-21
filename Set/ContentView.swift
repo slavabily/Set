@@ -9,10 +9,40 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
+        CardView()
+            
+            .aspectRatio(4/2, contentMode: .fit)
             .padding()
     }
 }
+
+
+struct CardView: View {
+    
+    let shape = "Capsule"
+    
+    var body: some View {
+        
+        if shape == "Rectangle" {
+            Rectangle()
+        } else if shape == "Capsule" {
+            Capsule()
+        } else if shape == "Diamond" {
+            Diamond()
+        }
+    } 
+}
+
+
+
+
+
+
+
+
+
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
