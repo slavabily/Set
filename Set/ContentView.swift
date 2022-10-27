@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var game: SetGame
+    
     var body: some View {
-        CardView()
-            
+        CardView(game: game)
             .aspectRatio(4/2, contentMode: .fit)
             .padding()
     }
 }
 
-
 struct CardView: View {
     
-    let shape = "Capsule"
+    let game: SetGame
     
     var body: some View {
-        
-        if shape == "Rectangle" {
-            Rectangle()
-        } else if shape == "Capsule" {
-            Capsule()
-        } else if shape == "Diamond" {
-            Diamond()
+        ZStack {
+            game.coloredSymbol
         }
-    } 
+        
+        
+        
+        
+    }
 }
+
 
 
 
@@ -46,6 +46,6 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(game: SetGame())
     }
 }
