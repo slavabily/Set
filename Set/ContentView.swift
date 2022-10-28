@@ -22,13 +22,7 @@ struct CardView: View {
     let game: SetGame
     
     var body: some View {
-        ZStack {
-            game.coloredSymbol
-        }
-        
-        
-        
-        
+            game.cardLook
     }
 }
 

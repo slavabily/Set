@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct Card {
+    let symbol: Symbol
+    let quantity = (1...3).randomElement()
+}
+
 struct Symbol {
     let name: Shape
     let color: Color

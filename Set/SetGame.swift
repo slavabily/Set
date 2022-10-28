@@ -10,11 +10,11 @@ import SwiftUI
 class SetGame: ObservableObject {
     
     @Published
-    var model = Symbol()
+    private var card = Card(symbol: Symbol())
     
     @ViewBuilder
     func shape<T: Shape>(_ shape: T) -> some View {
-        switch model.look {
+        switch card.symbol.look {
         case .filled:
             shape
         case .shaded:
@@ -26,7 +26,7 @@ class SetGame: ObservableObject {
     
     @ViewBuilder
     var symbol: some View {
-        switch model.name {
+        switch card.symbol.name {
         case .rectangle:
             shape(Rectangle())
         case .capsule:
@@ -38,13 +38,34 @@ class SetGame: ObservableObject {
     
     @ViewBuilder
     var coloredSymbol: some View {
-        switch model.color {
+        switch card.symbol.color {
         case .red:
             symbol.foregroundColor(.red)
         case .blue:
             symbol.foregroundColor(.blue)
         case .green:
             symbol.foregroundColor(.green)
+        }
+    }
+    
+    @ViewBuilder
+    var cardLook: some View {
+        switch card.quantity {
+        case 1:
+               coloredSymbol
+        case 2:
+            VStack {
+                coloredSymbol
+                coloredSymbol
+            }
+        case 3:
+            VStack {
+                coloredSymbol
+                coloredSymbol
+                coloredSymbol
+            }
+        default:
+            coloredSymbol
         }
     }
 }
