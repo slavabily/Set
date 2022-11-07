@@ -9,9 +9,21 @@ import SwiftUI
 
 class SetGame: ObservableObject {
     
-    @Published
-    private var card = Card(symbol: Symbol())
+    static func createGame() -> Game {
+        return Game(quantityOfCards: 4)
+    }
+   
+   @Published
+    private var game: Game = createGame()
     
+    var cards: [Game.Card] {
+        game.cards
+    }
+    
+    var card: Game.Card {
+        cards.randomElement()!
+    }
+     
     @ViewBuilder
     func shape<T: Shape>(_ shape: T) -> some View {
         switch card.symbol.look {
@@ -24,15 +36,21 @@ class SetGame: ObservableObject {
         }
     }
     
+    func aspect<T: View>(_ s: T) -> some View {
+        return s
+            .aspectRatio(4/2, contentMode: .fit)
+            .padding()
+    }
+    
     @ViewBuilder
     var symbol: some View {
         switch card.symbol.name {
         case .rectangle:
-            shape(Rectangle())
+            aspect(shape(Rectangle()))
         case .capsule:
-           shape(Capsule())
+            aspect(shape(Capsule()))
         case .diamond:
-              shape(Diamond())
+            aspect(shape(Diamond()))
         }
     }
     
@@ -50,7 +68,7 @@ class SetGame: ObservableObject {
     
     @ViewBuilder
     var cardLook: some View {
-        switch card.quantity {
+        switch card.quantityOfSymbols {
         case 1:
                coloredSymbol
         case 2:
