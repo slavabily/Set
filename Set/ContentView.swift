@@ -13,7 +13,7 @@ struct ContentView: View {
     var body: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
             ForEach(0..<setGame.cards.count) { _ in
-                CardView(setGame: setGame)
+                CardView(card: setGame)
             }
         }
     }
@@ -21,22 +21,25 @@ struct ContentView: View {
 
 struct CardView: View {
     
-    let setGame: SetGame
+    let card: SetGame
     
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 20)
+        let card = RoundedRectangle(cornerRadius: 20)
         ZStack {
-            shape
+            card
                 .fill()
                 .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
-            shape
+            card
                 .strokeBorder(lineWidth: 3)
-            setGame.cardLook
-                .scaleEffect(0.8)
+            VStack {
+                Spacer()
+                self.card.cardLook
+                Spacer()
+            }
+            
         }
         .aspectRatio(2/3, contentMode: .fit)
-        .padding()
-            
+        .padding()    
     }
 }
 
