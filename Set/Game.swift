@@ -13,25 +13,34 @@ struct Game {
     init(quantityOfCards: Int) {
         for _ in 0..<quantityOfCards {
             let card = Card(symbol: Symbol())
-            cards.append(card)
+            
+            // TODO: algorithm of unique cards creation
+            
+            if !cards.contains(where: {
+                $0.symbol == card.symbol
+            
+            }) {
+                cards.append(card)
+            }
         }
+        print("Cards quantity: \(cards.count)")
     }
 }
 
 struct Card {
     let symbol: Symbol
-    let quantityOfSymbols = (1...3).randomElement()  
+    let quantityOfSymbols = (1...3).randomElement()
 }
 
-struct Symbol {
+struct Symbol: Equatable {
     let shape: Shape
-    let look: Look
     let color: Color
+    let look: Look
     
     init() {
         shape = .allCases.randomElement()!
-        look = .allCases.randomElement()!
         color = .allCases.randomElement()!
+        look = .allCases.randomElement()!
     }
     
     enum Shape: CaseIterable {

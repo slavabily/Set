@@ -11,9 +11,11 @@ struct ContentView: View {
     @ObservedObject var setGame: SetGame
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))]) {
-            ForEach(0..<setGame.cards.count) { _ in
-                CardView(card: setGame)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
+                ForEach(0..<setGame.cards.count) { _ in
+                    CardView(card: setGame)
+                }
             }
         }
     }

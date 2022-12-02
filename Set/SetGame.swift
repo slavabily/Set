@@ -10,7 +10,7 @@ import SwiftUI
 class SetGame: ObservableObject {
     
     static func createGame() -> Game {
-        return Game(quantityOfCards: 4)
+        return Game(quantityOfCards: 81)
     }
     
     @Published
@@ -70,9 +70,12 @@ class SetGame: ObservableObject {
     
         @ViewBuilder
         var cardLook: some View {
+            let coloredSymbol = coloredSymbol
             switch card.quantityOfSymbols {
             case 1:
-                   coloredSymbol
+                VStack{
+                    coloredSymbol
+                }
             case 2:
                 VStack {
                     coloredSymbol
