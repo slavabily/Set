@@ -7,32 +7,49 @@
 
 import Foundation
 
+extension Array where Element: Hashable {
+    func removingDuplicates() -> [Element] {
+        var addedDict = [Element: Bool]()
+
+        return filter {
+            addedDict.updateValue(true, forKey: $0) == nil
+        }
+    }
+
+    mutating func removeDuplicates() {
+        self = self.removingDuplicates()
+    }
+}
+
 struct Game {
     var cards = [Card]()
     
     init(quantityOfCards: Int) {
-        for _ in 0..<quantityOfCards {
+        while cards.count < quantityOfCards {
             let card = Card(symbol: Symbol())
             
             // TODO: algorithm of unique cards creation
-            
             if !cards.contains(where: {
-                $0.symbol == card.symbol
-            
+                $0 == card
             }) {
                 cards.append(card)
-            }
+            }   
         }
+        
         print("Cards quantity: \(cards.count)")
+        
+        let uniqueCards = cards.removingDuplicates()
+        
+        print("Unique cards quantity: \(uniqueCards.count)")
     }
 }
 
-struct Card {
+struct Card: Equatable, Hashable {
     let symbol: Symbol
     let quantityOfSymbols = (1...3).randomElement()
 }
 
-struct Symbol: Equatable {
+struct Symbol: Equatable, Hashable {
     let shape: Shape
     let color: Color
     let look: Look
