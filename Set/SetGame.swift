@@ -10,7 +10,7 @@ import SwiftUI
 class SetGame: ObservableObject {
     
     static func createGame() -> Game {
-        return Game(quantityOfCards: 80)
+        return Game(quantityOfCards: 81)
     }
     
     @Published

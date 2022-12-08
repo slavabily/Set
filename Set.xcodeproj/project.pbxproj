@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B91E05552940F9CF00CE5AE1 /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91E05542940F9CF00CE5AE1 /* AspectVGrid.swift */; };
 		B943754C2918257A004B624B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B943754B2918257A004B624B /* Game.swift */; };
 		B9468AE22902C0C300D31DDF /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9468AE12902C0C300D31DDF /* SetGame.swift */; };
 		B98BB8002901651700816385 /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BB7FF2901651700816385 /* SetApp.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B91E05542940F9CF00CE5AE1 /* AspectVGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		B943754B2918257A004B624B /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B9468AE12902C0C300D31DDF /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
 		B98BB7FC2901651700816385 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +64,7 @@
 				B9A3F4C529026E1900536F69 /* Diamond.swift */,
 				B9468AE12902C0C300D31DDF /* SetGame.swift */,
 				B943754B2918257A004B624B /* Game.swift */,
+				B91E05542940F9CF00CE5AE1 /* AspectVGrid.swift */,
 				B98BB8032901651800816385 /* Assets.xcassets */,
 				B98BB8052901651800816385 /* Preview Content */,
 			);
@@ -148,6 +151,7 @@
 			files = (
 				B9A3F4C629026E1900536F69 /* Diamond.swift in Sources */,
 				B943754C2918257A004B624B /* Game.swift in Sources */,
+				B91E05552940F9CF00CE5AE1 /* AspectVGrid.swift in Sources */,
 				B98BB8022901651700816385 /* ContentView.swift in Sources */,
 				B9468AE22902C0C300D31DDF /* SetGame.swift in Sources */,
 				B98BB8002901651700816385 /* SetApp.swift in Sources */,

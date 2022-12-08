@@ -11,12 +11,9 @@ struct ContentView: View {
     @ObservedObject var setGame: SetGame
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))], spacing: 0) {
-                ForEach( setGame.cards, id: \.self) { card in
-                    CardView(card: card)
-                }
-            }
+        AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
+            CardView(card: card)
+            
         }
     }
 }
@@ -26,21 +23,23 @@ struct CardView: View {
     let card: Card
     
     var body: some View {
-        let card = RoundedRectangle(cornerRadius: 20)
-        ZStack {
-            card
-                .fill()
-                .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
-            card
-                .strokeBorder(lineWidth: 3)
-            VStack {
-                Spacer()
-                cardLook
-                Spacer()
+        GeometryReader { geometry in
+            let card = RoundedRectangle(cornerRadius: geometry.size.width/5)
+            ZStack {
+                card
+                    .fill()
+                    .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
+                card
+                    .strokeBorder(lineWidth: 3)
+                VStack {
+                    Spacer()
+                    cardLook
+                    Spacer()
+                }
             }
         }
         .aspectRatio(2/3, contentMode: .fill)
-        .padding(.vertical, 2)
+        .padding(2)
     }
     
     @ViewBuilder

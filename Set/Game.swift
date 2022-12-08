@@ -13,7 +13,6 @@ struct Game {
     init(quantityOfCards: Int) {
         repeat {
             let card = Card(symbol: Symbol())
-            
             if !cards.contains(where: { $0 == card }) {
                 cards.append(card)
             }   
