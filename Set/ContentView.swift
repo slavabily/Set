@@ -11,9 +11,15 @@ struct ContentView: View {
     @ObservedObject var setGame: SetGame
     
     var body: some View {
-        AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
-            CardView(card: card)
-            
+        VStack {
+            AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
+                CardView(card: card)
+            }
+            if setGame.cards.count < 21 {
+                Button("Open 3 Cards") {
+                    setGame.open3Cards()
+                }
+            }
         }
     }
 }

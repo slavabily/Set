@@ -10,13 +10,19 @@ import SwiftUI
 class SetGame: ObservableObject {
     
     static func createGame() -> Game {
-        return Game(quantityOfCards: 81)
+        return Game()
     }
     
     @Published
     private var game: Game = createGame()
     
     var cards: [Card] {
-        game.cards
+        Game.cardsOnTheTable
+    }
+    
+    // MARK: Actions
+    
+    func open3Cards() {
+        game.open3Cards()
     }
 }
