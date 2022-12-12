@@ -25,4 +25,8 @@ class SetGame: ObservableObject {
     func open3Cards() {
         game.open3Cards()
     }
+    
+    func selectCard(_ card: Card) {
+        game.selectCard(card)
+    }
 }

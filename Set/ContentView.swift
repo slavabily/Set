@@ -14,6 +14,11 @@ struct ContentView: View {
         VStack {
             AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
                 CardView(card: card)
+                    .onTapGesture {
+                        print("\(setGame.cards)")
+                        setGame.selectCard(card)
+                        print("\(setGame.cards)")
+                    }
             }
             if setGame.cards.count < 21 {
                 Button("Open 3 Cards") {
@@ -31,10 +36,8 @@ struct CardView: View {
     var body: some View {
         GeometryReader { geometry in
             let card = RoundedRectangle(cornerRadius: geometry.size.width/5)
-            ZStack {
-                card
-                    .fill()
-                    .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
+            ZStack { 
+                cardBackground(card)
                 card
                     .strokeBorder(lineWidth: 3)
                 VStack {
@@ -111,6 +114,25 @@ struct CardView: View {
             shape.stroke(lineWidth: 5)
         case .shaded:
             shape.opacity(0.5)
+        }
+    }
+    
+    @ViewBuilder
+    func cardBackground<T: Shape>(_ card: T) -> some View {
+        switch self.card.backgroundColor {
+        case .white:
+            card
+                .fill()
+                .foregroundColor(.white)
+        case .yellow:
+            card
+                .fill()
+                .opacity(0.3)
+                .foregroundColor(.yellow)
+        case .pink:
+            card
+                .fill()
+                .foregroundColor(.pink)
         }
     }
 }

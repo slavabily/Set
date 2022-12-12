@@ -10,6 +10,7 @@ import Foundation
 struct Game {
     static var cardsOnTheTable = [Card]()
     private var allCards = [Card]()
+    private var isCardSelected = false
     
     private var initiallyDealtCards: [Card] {
         var dCards = [Card]()
@@ -42,13 +43,38 @@ struct Game {
         } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + 3
         
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
-        print("\(Self.cardsOnTheTable.count)")
+    }
+    
+    mutating func selectCard(_ card: Card) {
+        var selectedCard = card
+        if !isCardSelected {
+            selectedCard.backgroundColor = .yellow
+            if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
+                Self.cardsOnTheTable.remove(at: index)
+                Self.cardsOnTheTable.insert(selectedCard, at: index)
+            }
+            isCardSelected = true
+        } else {
+            selectedCard.backgroundColor = .white
+            if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
+                Self.cardsOnTheTable.remove(at: index)
+                Self.cardsOnTheTable.insert(selectedCard, at: index)
+            }
+            isCardSelected = false
+        }
     }
 }
 
 struct Card: Equatable, Hashable {
     let symbol: Symbol
     let quantityOfSymbols = (1...3).randomElement()
+    var backgroundColor: BackgroundColor = .white
+    
+    enum BackgroundColor {
+        case white
+        case yellow
+        case pink
+    }
 }
 
 struct Symbol: Equatable, Hashable {
