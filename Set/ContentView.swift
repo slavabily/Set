@@ -15,17 +15,27 @@ struct ContentView: View {
             AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .onTapGesture {
-                        print("\(setGame.cards)")
                         setGame.selectCard(card)
-                        print("\(setGame.cards)")
                     }
             }
+            buttons
+        }
+    }
+    
+    var buttons: some View {
+        HStack {
             if setGame.cards.count < 21 {
                 Button("Open 3 Cards") {
                     setGame.open3Cards()
                 }
             }
+            Spacer()
+            Button("Find Set") {
+                setGame.findSet()
+            }
         }
+        .font(.title)
+        .padding()
     }
 }
 
@@ -111,7 +121,10 @@ struct CardView: View {
         case .filled:
             shape
         case .stroked:
-            shape.stroke(lineWidth: 5)
+            ZStack {
+                shape.fill(.white)
+                shape.stroke(lineWidth: 5)
+            }
         case .shaded:
             shape.opacity(0.5)
         }
@@ -132,6 +145,7 @@ struct CardView: View {
         case .pink:
             card
                 .fill()
+                .opacity(0.3)
                 .foregroundColor(.pink)
         }
     }

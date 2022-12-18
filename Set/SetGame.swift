@@ -29,4 +29,8 @@ class SetGame: ObservableObject {
     func selectCard(_ card: Card) {
         game.selectCard(card)
     }
+    
+    func findSet() {
+        game.findSet()
+    }
 }

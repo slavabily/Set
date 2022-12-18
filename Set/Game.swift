@@ -8,8 +8,10 @@
 import Foundation
 
 struct Game {
-    static var cardsOnTheTable = [Card]()
     private var allCards = [Card]()
+    static var cardsOnTheTable = [Card]()
+    private var trueSet: [Card]?
+    
     private var isCardSelected = false
     
     private var initiallyDealtCards: [Card] {
@@ -53,6 +55,14 @@ struct Game {
                 Self.cardsOnTheTable.remove(at: index)
                 Self.cardsOnTheTable.insert(selectedCard, at: index)
             }
+            
+            // TODO: _
+            // 1) collect 3 selected cards into the 'previousSet';
+            // 2) check if 'previousSet' is identical to the 'trueSet';
+            // 3) if yes - remove the true set from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards by new ones from the deck;
+            // 4) if no - deselect the cards selected and empty the previous set.
+            
+            
             isCardSelected = true
         } else {
             selectedCard.backgroundColor = .white
@@ -61,6 +71,35 @@ struct Game {
                 Self.cardsOnTheTable.insert(selectedCard, at: index)
             }
             isCardSelected = false
+        }
+    }
+    
+    mutating func findSet() {
+        for card1 in Self.cardsOnTheTable {
+            for card2 in Self.cardsOnTheTable {
+                for card3 in Self.cardsOnTheTable {
+                    if card1 == card2 || card2 == card3 || card1 == card3 {
+                        continue
+                    } else {
+                        //MARK: checking if cards conform to the set rules
+                        if card1.symbol.shape == card2.symbol.shape && card2.symbol.shape == card3.symbol.shape,
+                           card1.quantityOfSymbols == card2.quantityOfSymbols && card2.quantityOfSymbols == card3.quantityOfSymbols
+                        {
+                            // create the new cards with same properties but another background color
+                            [card1, card2, card3].forEach({ replace($0)}) 
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func replace(_ card: Card) {
+        var newCard = card
+        newCard.backgroundColor = .pink
+        if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
+            Self.cardsOnTheTable.remove(at: index)
+            Self.cardsOnTheTable .insert(newCard, at: index)
         }
     }
 }
