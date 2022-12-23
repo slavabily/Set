@@ -9,10 +9,8 @@ import Foundation
 
 struct Game {
     private var allCards = [Card]()
-    static var cardsOnTheTable = [Card]()
-    private var trueSet: [Card]?
-    
-    private var isCardSelected = false
+    private(set) static var cardsOnTheTable = [Card]()
+    private var trueSet = [Card]()
     
     private var initiallyDealtCards: [Card] {
         var dCards = [Card]()
@@ -35,6 +33,7 @@ struct Game {
     }
     
     mutating func open3Cards() {
+        unmark()
         guard Self.cardsOnTheTable.count < 21 else { return }
         var cardsOnTheTablePlusOpenedCards = Self.cardsOnTheTable
         repeat {
@@ -48,12 +47,14 @@ struct Game {
     }
     
     mutating func selectCard(_ card: Card) {
-        var selectedCard = card
-        if !isCardSelected {
-            selectedCard.backgroundColor = .yellow
+        unmark()
+        var tappedCard = card
+        if !tappedCard.isSelected {
+            tappedCard.isSelected = true
+            tappedCard.backgroundColor = .yellow
             if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
                 Self.cardsOnTheTable.remove(at: index)
-                Self.cardsOnTheTable.insert(selectedCard, at: index)
+                Self.cardsOnTheTable.insert(tappedCard, at: index)
             }
             
             // TODO: _
@@ -62,19 +63,18 @@ struct Game {
             // 3) if yes - remove the true set from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards by new ones from the deck;
             // 4) if no - deselect the cards selected and empty the previous set.
             
-            
-            isCardSelected = true
         } else {
-            selectedCard.backgroundColor = .white
+            tappedCard.isSelected = false
+            tappedCard.backgroundColor = .white
             if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
                 Self.cardsOnTheTable.remove(at: index)
-                Self.cardsOnTheTable.insert(selectedCard, at: index)
+                Self.cardsOnTheTable.insert(tappedCard, at: index)
             }
-            isCardSelected = false
         }
     }
     
     mutating func findSet() {
+        trueSet.removeAll()
         for card1 in Self.cardsOnTheTable {
             for card2 in Self.cardsOnTheTable {
                 for card3 in Self.cardsOnTheTable {
@@ -85,8 +85,10 @@ struct Game {
                         if card1.symbol.shape == card2.symbol.shape && card2.symbol.shape == card3.symbol.shape,
                            card1.quantityOfSymbols == card2.quantityOfSymbols && card2.quantityOfSymbols == card3.quantityOfSymbols
                         {
-                            // create the new cards with same properties but another background color
-                            [card1, card2, card3].forEach({ replace($0)}) 
+                            if trueSet.isEmpty {
+                                trueSet = [card1, card2, card3]
+                                trueSet.forEach({ mark($0)})
+                            }
                         }
                     }
                 }
@@ -94,7 +96,20 @@ struct Game {
         }
     }
     
-    private func replace(_ card: Card) {
+    private func unmark() {
+        Self.cardsOnTheTable.forEach { card in
+            var card_ = card
+            card_.backgroundColor = .white
+            if card.backgroundColor == .pink {
+                if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
+                    Self.cardsOnTheTable.remove(at: index)
+                    Self.cardsOnTheTable .insert(card_, at: index)
+                }
+            }
+        }
+    }
+    
+    private func mark(_ card: Card) {
         var newCard = card
         newCard.backgroundColor = .pink
         if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
@@ -108,6 +123,7 @@ struct Card: Equatable, Hashable {
     let symbol: Symbol
     let quantityOfSymbols = (1...3).randomElement()
     var backgroundColor: BackgroundColor = .white
+    var isSelected = false
     
     enum BackgroundColor {
         case white

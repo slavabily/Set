@@ -9,7 +9,7 @@ import SwiftUI
 
 class SetGame: ObservableObject {
     
-    static func createGame() -> Game {
+    private static func createGame() -> Game {
         return Game()
     }
     
