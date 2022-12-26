@@ -33,7 +33,6 @@ struct Game {
     }
     
     mutating func open3Cards() {
-        unmark()
         guard Self.cardsOnTheTable.count < 21 else { return }
         var cardsOnTheTablePlusOpenedCards = Self.cardsOnTheTable
         repeat {
@@ -44,33 +43,6 @@ struct Game {
         } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + 3
         
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
-    }
-    
-    mutating func selectCard(_ card: Card) {
-        unmark()
-        var tappedCard = card
-        if !tappedCard.isSelected {
-            tappedCard.isSelected = true
-            tappedCard.backgroundColor = .yellow
-            if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
-                Self.cardsOnTheTable.remove(at: index)
-                Self.cardsOnTheTable.insert(tappedCard, at: index)
-            }
-            
-            // TODO: _
-            // 1) collect 3 selected cards into the 'previousSet';
-            // 2) check if 'previousSet' is identical to the 'trueSet';
-            // 3) if yes - remove the true set from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards by new ones from the deck;
-            // 4) if no - deselect the cards selected and empty the previous set.
-            
-        } else {
-            tappedCard.isSelected = false
-            tappedCard.backgroundColor = .white
-            if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
-                Self.cardsOnTheTable.remove(at: index)
-                Self.cardsOnTheTable.insert(tappedCard, at: index)
-            }
-        }
     }
     
     mutating func findSet() {
@@ -87,7 +59,7 @@ struct Game {
                         {
                             if trueSet.isEmpty {
                                 trueSet = [card1, card2, card3]
-                                trueSet.forEach({ mark($0)})
+                                trueSet.forEach({ mark($0, with: .founded)})
                             }
                         }
                     }
@@ -96,25 +68,41 @@ struct Game {
         }
     }
     
-    private func unmark() {
-        Self.cardsOnTheTable.forEach { card in
-            var card_ = card
-            card_.backgroundColor = .white
-            if card.backgroundColor == .pink {
-                if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
-                    Self.cardsOnTheTable.remove(at: index)
-                    Self.cardsOnTheTable .insert(card_, at: index)
-                }
-            }
+    mutating func selectCard(_ card: Card) {
+        var tappedCard = card
+        if tappedCard.status == .default {
+            tappedCard.status = .selected
+            replace(card, by: tappedCard)
+            
+            // TODO: _for the game to play:
+            // 1) collect 3 selected cards into the 'previousSet';
+            // 2) check if 'previousSet' is identical to the 'trueSet';
+            // 3) if yes - remove the true set from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards by new ones from the deck;
+            // 4) if no - deselect the cards selected and empty the previous set.
+            
+        } else {
+            tappedCard.status = .default
+            replace(card, by: tappedCard)
         }
     }
     
-    private func mark(_ card: Card) {
+    private func mark(_ card: Card, with: Card.Status) {
         var newCard = card
-        newCard.backgroundColor = .pink
+        switch with {
+        case .default:
+            newCard.status = .default
+        case .founded:
+            newCard.status = .founded
+        case .selected:
+            newCard.status = .selected
+        }
+        replace(card, by: newCard)
+    }
+    
+    private func replace(_ card: Card, by tapped: Card) {
         if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
             Self.cardsOnTheTable.remove(at: index)
-            Self.cardsOnTheTable .insert(newCard, at: index)
+            Self.cardsOnTheTable.insert(tapped, at: index)
         }
     }
 }
@@ -122,8 +110,13 @@ struct Game {
 struct Card: Equatable, Hashable {
     let symbol: Symbol
     let quantityOfSymbols = (1...3).randomElement()
-    var backgroundColor: BackgroundColor = .white
-    var isSelected = false
+    var status: Status = .default
+    
+    enum Status {
+        case `default`
+        case selected
+        case founded
+    }
     
     enum BackgroundColor {
         case white

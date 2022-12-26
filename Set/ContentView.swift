@@ -132,17 +132,17 @@ struct CardView: View {
     
     @ViewBuilder
     func cardBackground<T: Shape>(_ card: T) -> some View {
-        switch self.card.backgroundColor {
-        case .white:
+        switch self.card.status {
+        case .default:
             card
                 .fill()
                 .foregroundColor(.white)
-        case .yellow:
+        case .selected:
             card
                 .fill()
                 .opacity(0.3)
                 .foregroundColor(.yellow)
-        case .pink:
+        case .founded:
             card
                 .fill()
                 .opacity(0.3)
