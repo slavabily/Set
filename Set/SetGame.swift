@@ -31,6 +31,6 @@ class SetGame: ObservableObject {
     }
     
     func findSet() {
-        game.findSet()
+        game.findTrueSet()
     }
 }

@@ -11,6 +11,7 @@ struct Game {
     private var allCards = [Card]()
     private(set) static var cardsOnTheTable = [Card]()
     private var trueSet = [Card]()
+    private var selectedCards = [Card]()
     
     private var initiallyDealtCards: [Card] {
         var dCards = [Card]()
@@ -45,8 +46,9 @@ struct Game {
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
     }
     
-    mutating func findSet() {
+    mutating func findTrueSet() {
         trueSet.removeAll()
+        selectedCards.removeAll()
         for card1 in Self.cardsOnTheTable {
             for card2 in Self.cardsOnTheTable {
                 for card3 in Self.cardsOnTheTable {
@@ -69,20 +71,25 @@ struct Game {
     }
     
     mutating func selectCard(_ card: Card) {
+        if selectedCards.isEmpty {
+            Self.cardsOnTheTable.forEach({mark($0, with: .default)})
+        }
         var tappedCard = card
-        if tappedCard.status == .default {
+        if tappedCard.status != .selected {
             tappedCard.status = .selected
             replace(card, by: tappedCard)
+            selectedCards.append(tappedCard)
             
             // TODO: _for the game to play:
-            // 1) collect 3 selected cards into the 'previousSet';
-            // 2) check if 'previousSet' is identical to the 'trueSet';
-            // 3) if yes - remove the true set from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards by new ones from the deck;
-            // 4) if no - deselect the cards selected and empty the previous set.
+            // 1) collect 3 selected cards into the 'selectedCards';
+            // 2) check if 'selectedCards' is identical to the 'trueSet';
+            // 3) if yes - remove the 'trueSet' from the 'cardsOnThetable' and from the 'allCards' respectively and replace removed cards in 'cardsOnTheTable' by new ones from the 'allCards';
+            //    if no - deselect the cards selected and empty the 'selectedCards'.
             
         } else {
             tappedCard.status = .default
             replace(card, by: tappedCard)
+            selectedCards.removeAll(where: {$0 == tappedCard})
         }
     }
     
