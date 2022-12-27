@@ -22,6 +22,8 @@ struct Game {
         return dCards
     }
     
+    
+    
     init() {
         repeat {
             let card = Card(symbol: Symbol())
