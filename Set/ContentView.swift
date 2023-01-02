@@ -15,11 +15,15 @@ struct ContentView: View {
             AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .onTapGesture {
+                        
                         setGame.selectCard(card)
                     }
             }
             buttons
-        }
+            if setGame.showingSetIsRemoved {
+                Text("Set is removed!")
+            }
+        }    
     }
     
     var buttons: some View {
@@ -31,7 +35,7 @@ struct ContentView: View {
             }
             Spacer()
             Button("Find Set") {
-                setGame.findSet()
+                setGame.findTrueSet()
             }
         }
         .font(.title)

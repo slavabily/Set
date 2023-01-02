@@ -20,6 +20,10 @@ class SetGame: ObservableObject {
         Game.cardsOnTheTable
     }
     
+    var showingSetIsRemoved: Bool {
+        game.isSetRemoved
+    }
+    
     // MARK: Actions
     
     func open3Cards() {
@@ -30,7 +34,7 @@ class SetGame: ObservableObject {
         game.selectCard(card)
     }
     
-    func findSet() {
+    func findTrueSet() {
         game.findTrueSet()
     }
 }
