@@ -21,7 +21,11 @@ class SetGame: ObservableObject {
     }
     
     var showingSetIsRemoved: Bool {
-        game.isSetRemoved
+        game.setIsRemoved
+    }
+    
+    var showingItIsNotSet: Bool {
+        game.itIsNotSet
     }
     
     // MARK: Actions

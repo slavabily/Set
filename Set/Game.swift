@@ -8,7 +8,9 @@
 import Foundation
 
 struct Game {
-    var isSetRemoved = false
+    private(set) var setIsRemoved = false
+    private(set) var itIsNotSet = false
+    
     private var allCards = [Card]()
     private(set) static var cardsOnTheTable = [Card]()
     private var trueSet = [Card]()
@@ -90,38 +92,38 @@ struct Game {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
             setToCompare = trueSet
             trueSet.removeAll()
-            isSetRemoved = false
             return
         }
+        setIsRemoved = false
+        itIsNotSet = false
+        
         if card.status == .default || card.status == .founded {
+            
             if selectedCards.count < 3 {
                 mark(card, with: .selected)
                 selectedCards.append(card)
+                
                 if !setToCompare.isEmpty, selectedCards.count == setToCompare.count {
                     let difference = setToCompare.difference(from: selectedCards)
                     print("difference: \(difference)")
+                    
                     if difference.isEmpty {
                         setToCompare.forEach({ card in
                             allCards.removeAll(where: {$0 == card})
+                            
                             if let index = Self.cardsOnTheTable.firstIndex(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols}) {
                                 Self.cardsOnTheTable.remove(at: index)
+                                
                                 if let newCard = allCards.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
                                     Self.cardsOnTheTable.insert(newCard, at: index)
                                 }
                             }
                         })
-                        isSetRemoved = true
-                        print("allCards.count: \(allCards.count)")
-                        print("Self.cardsOnTheTable.count: \(Self.cardsOnTheTable.count)")
-                        // add 3 random cards from 'allCards' to the 'cardsOnTheTable'
-                         
-                         
+                        setIsRemoved = true
                     } else {
-                        // show the alert 'it's not a set'
+                        itIsNotSet = true
                     }
-                    
                 }
-                
             } else {
                 selectedCards.forEach({mark($0, with: .default)})
                 selectedCards.removeAll()
@@ -146,7 +148,7 @@ struct Game {
     }
     
     private func replace(_ card: Card, by tapped: Card) {
-        if let index = Self.cardsOnTheTable.firstIndex(where: { $0 == card }) {
+        if let index = Self.cardsOnTheTable.firstIndex(where: { $0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols }) {
             Self.cardsOnTheTable.remove(at: index)
             Self.cardsOnTheTable.insert(tapped, at: index)
         }

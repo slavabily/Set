@@ -22,6 +22,8 @@ struct ContentView: View {
             buttons
             if setGame.showingSetIsRemoved {
                 Text("Set is removed!")
+            } else if setGame.showingItIsNotSet {
+                Text("It is not set!")
             }
         }    
     }
