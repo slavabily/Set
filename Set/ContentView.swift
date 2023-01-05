@@ -22,10 +22,18 @@ struct ContentView: View {
             buttons
             if setGame.showingSetIsRemoved {
                 Text("Set is removed!")
+                    .padding(.top)
+                    .frame(maxWidth: .infinity)
+                    .background(.green)
+                    .foregroundColor(.white)
             } else if setGame.showingItIsNotSet {
-                Text("It is not set!")
+                Text("It is not a set!")
+                    .padding(.top)
+                    .frame(maxWidth: .infinity)
+                    .background(.red)
+                    .foregroundColor(.white)
             }
-        }    
+        }
     }
     
     var buttons: some View {

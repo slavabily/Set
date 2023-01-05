@@ -23,7 +23,7 @@ struct AspectVGrid<Item, ItemView>: View where ItemView: View, Item: Hashable {
             ScrollView {
                 VStack {
                     let minSize = widthThatFits(itemCount: items.count, in: geometry.size, itemAspectRatio: aspectRatio)
-                    let width: CGFloat = minSize < geometry.size.width/3 ? geometry.size.width/3 : minSize
+                    let width: CGFloat = minSize < geometry.size.width/4 ? geometry.size.width/4 : minSize
                     LazyVGrid(columns: [adaptiveGridItem(width: width)], spacing: 0) {
                         ForEach(items, id: \.self) { item in
                             content(item).aspectRatio(aspectRatio, contentMode: .fit)

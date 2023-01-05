@@ -120,6 +120,10 @@ struct Game {
                             }
                         })
                         setIsRemoved = true
+                        findTrueSet()
+                        if selectedCards.isEmpty {
+                            Self.cardsOnTheTable.forEach({mark($0, with: .default)})
+                        }
                     } else {
                         itIsNotSet = true
                     }
@@ -130,7 +134,7 @@ struct Game {
             }
         } else {
             mark(card, with: .default)
-            selectedCards.removeAll(where: {$0 == card})
+            selectedCards.removeAll(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols})
         }
     }
     
