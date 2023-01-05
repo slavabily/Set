@@ -15,24 +15,12 @@ struct ContentView: View {
             AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .onTapGesture {
-                        
                         setGame.selectCard(card)
                     }
             }
             buttons
-            if setGame.showingSetIsRemoved {
-                Text("Set is removed!")
-                    .padding(.top)
-                    .frame(maxWidth: .infinity)
-                    .background(.green)
-                    .foregroundColor(.white)
-            } else if setGame.showingItIsNotSet {
-                Text("It is not a set!")
-                    .padding(.top)
-                    .frame(maxWidth: .infinity)
-                    .background(.red)
-                    .foregroundColor(.white)
-            }
+            AlertView(showingSetIsRemoved: setGame.showingSetIsRemoved,
+                      showingItIsNotSet: setGame.showingItIsNotSet)
         }
     }
     
@@ -50,6 +38,28 @@ struct ContentView: View {
         }
         .font(.title)
         .padding()
+    }
+}
+
+struct AlertView: View {
+    
+    let showingSetIsRemoved: Bool
+    let showingItIsNotSet: Bool
+    
+    var body: some View {
+        if showingSetIsRemoved {
+            Text("Set is removed!")
+                .padding(.top)
+                .frame(maxWidth: .infinity)
+                .background(.green)
+                .foregroundColor(.white)
+        } else if showingItIsNotSet {
+            Text("It is not a set!")
+                .padding(.top)
+                .frame(maxWidth: .infinity)
+                .background(.red)
+                .foregroundColor(.white)
+        }
     }
 }
 
