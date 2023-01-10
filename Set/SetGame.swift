@@ -20,12 +20,20 @@ class SetGame: ObservableObject {
         Game.cardsOnTheTable
     }
     
+    var deck: [Card] {
+        Game.deck
+    }
+    
     var showingSetIsRemoved: Bool {
-        game.setIsRemoved
+        game.alert == .setIsRemoved
     }
     
     var showingItIsNotSet: Bool {
-        game.itIsNotSet
+        game.alert == .itIsNotASet
+    }
+    
+    var showingOpen3MoreCards: Bool {
+        game.alert == .open3MoreCards
     }
     
     // MARK: Actions

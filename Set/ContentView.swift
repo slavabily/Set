@@ -20,13 +20,15 @@ struct ContentView: View {
             }
             buttons
             AlertView(showingSetIsRemoved: setGame.showingSetIsRemoved,
-                      showingItIsNotSet: setGame.showingItIsNotSet)
+                      showingItIsNotSet: setGame.showingItIsNotSet,
+                      showingOpen3MoreCards: setGame.showingOpen3MoreCards)
         }
     }
     
     var buttons: some View {
         HStack {
-            if setGame.cards.count < 21 {
+//            if setGame.cards.count < 21
+            if setGame.deck.count > 0 {
                 Button("Open 3 Cards") {
                     setGame.open3Cards()
                 }
@@ -45,19 +47,27 @@ struct AlertView: View {
     
     let showingSetIsRemoved: Bool
     let showingItIsNotSet: Bool
+    let showingOpen3MoreCards: Bool
     
     var body: some View {
         if showingSetIsRemoved {
-            Text("Set is removed!")
-                .padding(.top)
-                .frame(maxWidth: .infinity)
-                .background(.green)
-                .foregroundColor(.white)
+            Text_(message: "Set is removed!", background: .green)
         } else if showingItIsNotSet {
-            Text("It is not a set!")
+            Text_(message: "It is not a set!", background: .red)
+        } else if showingOpen3MoreCards {
+            Text_(message: "There is no set on the board. Open 3 more Cards", background: .blue)
+        }
+    }
+    
+    struct Text_: View {
+        let message: String
+        let background: Color
+        
+        var body: some View {
+            Text(message)
                 .padding(.top)
                 .frame(maxWidth: .infinity)
-                .background(.red)
+                .background(background)
                 .foregroundColor(.white)
         }
     }
@@ -166,7 +176,7 @@ struct CardView: View {
                 .fill()
                 .opacity(0.3)
                 .foregroundColor(.yellow)
-        case .founded:
+        case .fromTrueSet:
             card
                 .fill()
                 .opacity(0.3)

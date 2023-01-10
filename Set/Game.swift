@@ -8,83 +8,116 @@
 import Foundation
 
 struct Game {
-    private(set) var setIsRemoved = false
-    private(set) var itIsNotSet = false
     
-    private var allCards = [Card]()
+    struct Constats {
+        static let sizeOfDeck = 24
+        static let dealtCards = 12
+        static let openedCards = 3
+    }
+    
+    enum Alert {
+        case setIsRemoved
+        case itIsNotASet
+        case open3MoreCards
+        case `default`
+    }
+    
+    private(set) var alert: Alert = .default
+    private(set) static var deck = [Card]()
     private(set) static var cardsOnTheTable = [Card]()
     private var trueSet = [Card]()
     private var setToCompare = [Card]()
     private var selectedCards = [Card]()
     
     private var initiallyDealtCards: [Card] {
-        deal(from: allCards)
+        deal(from: Self.deck)
     }
     
     private func deal(from cards: [Card]) -> [Card] {
         var dCards = [Card]()
         repeat {
             let dealtCard = cards.randomElement()
-            if !dCards.contains(where: { $0 == dealtCard }) { dCards.append(dealtCard!)}
-        } while dCards.count < 12
+            Self.deck.removeAll(where: { $0 == dealtCard })
+            print("Deck size: \(Self.deck.count)")
+            if !dCards.contains(where: { $0 == dealtCard }) {
+                dCards.append(dealtCard!)
+            }
+        } while dCards.count < Self.Constats.dealtCards
         return dCards
     }
     
     init() {
         repeat {
             let card = Card(symbol: Symbol())
-            if !allCards.contains(where: { $0 == card }) {
-                allCards.append(card)
+            if !Self.deck.contains(where: { $0 == card }) {
+                Self.deck.append(card)
             }   
-        } while allCards.count < 81
+        } while Self.deck.count < Self.Constats.sizeOfDeck
         Self.cardsOnTheTable = initiallyDealtCards
-        findTrueSet()
+        findTrueSet_()
         if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         }
+        print("Deck size after first deal: \(Self.deck.count)")
     }
     
     mutating func open3Cards() {
-        guard Self.cardsOnTheTable.count < 21 else { return }
         var cardsOnTheTablePlusOpenedCards = Self.cardsOnTheTable
+        
+    // TODO:   do subtraction from the deck only when opening 3 more cards!
         repeat {
-            let card = allCards.randomElement()
-            if !cardsOnTheTablePlusOpenedCards.contains(where: { $0 == card }) {
-                cardsOnTheTablePlusOpenedCards.append(card!)
+            guard Self.deck.count > 0 else { return }
+            if let card = Self.deck.randomElement() {
+                if !cardsOnTheTablePlusOpenedCards.contains(where: { $0 == card }) {
+                    cardsOnTheTablePlusOpenedCards.append(card)
+                }
+            } else {
+                break
             }
-        } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + 3
+        } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + Constats.openedCards
+        
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
-        findTrueSet()
+        
+        findTrueSet_()
+        
         if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         }
+        alert = .default
     }
     
     mutating func findTrueSet() {
+        if findTrueSet_() {
+            alert = .default
+        } else {
+            alert = .open3MoreCards
+        }
+    }
+    
+    
+    @discardableResult
+    private mutating func findTrueSet_() -> Bool {
         trueSet.removeAll()
         selectedCards.removeAll()
-        if selectedCards.isEmpty {
-            Self.cardsOnTheTable.forEach({mark($0, with: .default)})
-        }
+        Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         for card1 in Self.cardsOnTheTable {
             for card2 in Self.cardsOnTheTable {
                 for card3 in Self.cardsOnTheTable {
                     if card1 == card2 || card2 == card3 || card1 == card3 {
                         continue
                     } else {
-                        //MARK: checking if cards conform to the set rules
                         if card1.symbol.shape == card2.symbol.shape && card2.symbol.shape == card3.symbol.shape,
                            card1.quantityOfSymbols == card2.quantityOfSymbols && card2.quantityOfSymbols == card3.quantityOfSymbols
                         {
-                            if trueSet.isEmpty {
-                                trueSet = [card1, card2, card3]
-                                trueSet.forEach({ mark($0, with: .founded)})
-                            }
+                            trueSet = [card1, card2, card3]
+                            trueSet.forEach({ mark($0, with: .fromTrueSet)})
+                            return true
                         }
                     }
                 }
             }
         }
+        return false
     }
     
     mutating func selectCard(_ card: Card) {
@@ -94,10 +127,7 @@ struct Game {
             trueSet.removeAll()
             return
         }
-        setIsRemoved = false
-        itIsNotSet = false
-        
-        if card.status == .default || card.status == .founded {
+        if card.status == .default || card.status == .fromTrueSet {
             
             if selectedCards.count < 3 {
                 mark(card, with: .selected)
@@ -108,24 +138,24 @@ struct Game {
                     print("difference: \(difference)")
                     
                     if difference.isEmpty {
+                        alert = .setIsRemoved
                         setToCompare.forEach({ card in
-                            allCards.removeAll(where: {$0 == card})
+                            Self.deck.removeAll(where: {$0 == card})
                             
                             if let index = Self.cardsOnTheTable.firstIndex(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols}) {
                                 Self.cardsOnTheTable.remove(at: index)
                                 
-                                if let newCard = allCards.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
+                                if let newCard = Self.deck.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
                                     Self.cardsOnTheTable.insert(newCard, at: index)
                                 }
                             }
                         })
-                        setIsRemoved = true
-                        findTrueSet()
+                        findTrueSet_()
                         if selectedCards.isEmpty {
                             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
                         }
                     } else {
-                        itIsNotSet = true
+                        alert = .itIsNotASet
                     }
                 }
             } else {
@@ -143,8 +173,8 @@ struct Game {
         switch with {
         case .default:
             newCard.status = .default
-        case .founded:
-            newCard.status = .founded
+        case .fromTrueSet:
+            newCard.status = .fromTrueSet
         case .selected:
             newCard.status = .selected
         }
@@ -167,7 +197,7 @@ struct Card: Equatable, Hashable {
     enum Status {
         case `default`
         case selected
-        case founded
+        case fromTrueSet
     }
     
     enum BackgroundColor {
