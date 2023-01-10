@@ -20,7 +20,8 @@ struct ContentView: View {
             }
             buttons
             AlertView(showingSetIsRemoved: setGame.showingSetIsRemoved,
-                      showingItIsNotSet: setGame.showingItIsNotSet)
+                      showingItIsNotSet: setGame.showingItIsNotSet,
+                      showingOpen3MoreCards: setGame.showingOpen3MoreCards)
         }
     }
     
@@ -45,19 +46,27 @@ struct AlertView: View {
     
     let showingSetIsRemoved: Bool
     let showingItIsNotSet: Bool
+    let showingOpen3MoreCards: Bool
     
     var body: some View {
         if showingSetIsRemoved {
-            Text("Set is removed!")
-                .padding(.top)
-                .frame(maxWidth: .infinity)
-                .background(.green)
-                .foregroundColor(.white)
+            Text_(message: "Set is removed!", background: .green)
         } else if showingItIsNotSet {
-            Text("It is not a set!")
+            Text_(message: "It is not a set!", background: .red)
+        } else if showingOpen3MoreCards {
+            Text_(message: "There is no set on the board. Open 3 more Cards", background: .blue)
+        }
+    }
+    
+    struct Text_: View {
+        let message: String
+        let background: Color
+        
+        var body: some View {
+            Text(message)
                 .padding(.top)
                 .frame(maxWidth: .infinity)
-                .background(.red)
+                .background(background)
                 .foregroundColor(.white)
         }
     }

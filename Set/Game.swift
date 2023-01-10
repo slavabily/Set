@@ -8,9 +8,15 @@
 import Foundation
 
 struct Game {
-    private(set) var setIsRemoved = false
-    private(set) var itIsNotSet = false
     
+    enum Alert {
+        case setIsRemoved
+        case itIsNotASet
+        case open3MoreCards
+        case `default`
+    }
+    
+    private(set) var alert: Alert = .default
     private var allCards = [Card]()
     private(set) static var cardsOnTheTable = [Card]()
     private var trueSet = [Card]()
@@ -38,7 +44,7 @@ struct Game {
             }   
         } while allCards.count < 81
         Self.cardsOnTheTable = initiallyDealtCards
-        findTrueSet()
+        findTrueSet_()
         if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         }
@@ -54,37 +60,45 @@ struct Game {
             }
         } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + 3
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
-        findTrueSet()
+        findTrueSet_()
         if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         }
+        alert = .default
     }
     
     mutating func findTrueSet() {
+        if findTrueSet_() {
+            alert = .default
+        } else {
+            alert = .open3MoreCards
+        }
+    }
+    
+    
+    @discardableResult
+    private mutating func findTrueSet_() -> Bool {
         trueSet.removeAll()
         selectedCards.removeAll()
-        if selectedCards.isEmpty {
-            Self.cardsOnTheTable.forEach({mark($0, with: .default)})
-        }
+        Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         for card1 in Self.cardsOnTheTable {
             for card2 in Self.cardsOnTheTable {
                 for card3 in Self.cardsOnTheTable {
                     if card1 == card2 || card2 == card3 || card1 == card3 {
                         continue
                     } else {
-                        //MARK: checking if cards conform to the set rules
                         if card1.symbol.shape == card2.symbol.shape && card2.symbol.shape == card3.symbol.shape,
                            card1.quantityOfSymbols == card2.quantityOfSymbols && card2.quantityOfSymbols == card3.quantityOfSymbols
                         {
-                            if trueSet.isEmpty {
-                                trueSet = [card1, card2, card3]
-                                trueSet.forEach({ mark($0, with: .founded)})
-                            }
+                            trueSet = [card1, card2, card3]
+                            trueSet.forEach({ mark($0, with: .founded)})
+                            return true
                         }
                     }
                 }
             }
         }
+        return false
     }
     
     mutating func selectCard(_ card: Card) {
@@ -94,9 +108,6 @@ struct Game {
             trueSet.removeAll()
             return
         }
-        setIsRemoved = false
-        itIsNotSet = false
-        
         if card.status == .default || card.status == .founded {
             
             if selectedCards.count < 3 {
@@ -108,6 +119,7 @@ struct Game {
                     print("difference: \(difference)")
                     
                     if difference.isEmpty {
+                        alert = .setIsRemoved
                         setToCompare.forEach({ card in
                             allCards.removeAll(where: {$0 == card})
                             
@@ -119,13 +131,12 @@ struct Game {
                                 }
                             }
                         })
-                        setIsRemoved = true
-                        findTrueSet()
+                        findTrueSet_()
                         if selectedCards.isEmpty {
                             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
                         }
                     } else {
-                        itIsNotSet = true
+                        alert = .itIsNotASet
                     }
                 }
             } else {
