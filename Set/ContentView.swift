@@ -27,7 +27,6 @@ struct ContentView: View {
     
     var buttons: some View {
         HStack {
-//            if setGame.cards.count < 21
             if setGame.deck.count > 0 {
                 Button("Open 3 Cards") {
                     setGame.open3Cards()

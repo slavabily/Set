@@ -34,16 +34,18 @@ struct Game {
     }
     
     private func deal(from cards: [Card]) -> [Card] {
-        var dCards = [Card]()
+        var deck = cards
+        var dealtCards = [Card]()
         repeat {
             let dealtCard = cards.randomElement()
-            Self.deck.removeAll(where: { $0 == dealtCard })
-            print("Deck size: \(Self.deck.count)")
-            if !dCards.contains(where: { $0 == dealtCard }) {
-                dCards.append(dealtCard!)
+            deck.removeAll(where: { $0 == dealtCard })
+            if !dealtCards.contains(where: { $0 == dealtCard }) {
+                dealtCards.append(dealtCard!)
             }
-        } while dCards.count < Self.Constats.dealtCards
-        return dCards
+        } while dealtCards.count < Constats.dealtCards
+        Self.deck = deck
+        print("Deck size after dealing of \(Constats.dealtCards): \(Self.deck.count) \n Dealt cards: \(dealtCards.count)")
+        return dealtCards
     }
     
     init() {
@@ -58,24 +60,19 @@ struct Game {
         if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
         }
-        print("Deck size after first deal: \(Self.deck.count)")
     }
     
     mutating func open3Cards() {
         var cardsOnTheTablePlusOpenedCards = Self.cardsOnTheTable
-        
-    // TODO:   do subtraction from the deck only when opening 3 more cards!
         repeat {
             guard Self.deck.count > 0 else { return }
-            if let card = Self.deck.randomElement() {
-                if !cardsOnTheTablePlusOpenedCards.contains(where: { $0 == card }) {
-                    cardsOnTheTablePlusOpenedCards.append(card)
-                }
-            } else {
-                break
+            let card = Self.deck.randomElement()
+            Self.deck.removeAll(where: {$0 == card})
+            if !cardsOnTheTablePlusOpenedCards.contains(where: { $0 == card }) {
+                cardsOnTheTablePlusOpenedCards.append(card!)
             }
         } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + Constats.openedCards
-        
+        print("Deck size after opening of 3 cards: \(Self.deck.count)")
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
         
         findTrueSet_()
