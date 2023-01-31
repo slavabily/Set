@@ -9,6 +9,7 @@ import SwiftUI
 
 class SetGame: ObservableObject {
     
+    @discardableResult
     private static func createGame() -> Game {
         return Game()
     }
@@ -51,5 +52,10 @@ class SetGame: ObservableObject {
     
     func findTrueSet() {
         game.findTrueSet()
+    }
+    
+    func newGame() {
+        objectWillChange.send()
+        Self.createGame()
     }
 }

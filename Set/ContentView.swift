@@ -26,16 +26,22 @@ struct ContentView: View {
     }
     
     var buttons: some View {
-        HStack {
-            if setGame.deck.count > 0 {
-                Button("Open 3 Cards") {
-                    setGame.open3Cards()
+        VStack {
+            HStack {
+                if setGame.deck.count > 0 {
+                    Button("Open 3 Cards") {
+                        setGame.open3Cards()
+                    }
+                }
+                Spacer()
+                Button("Find Set") {
+                    setGame.findTrueSet()
                 }
             }
-            Spacer()
-            Button("Find Set") {
-                setGame.findTrueSet()
+            Button("New Game") {
+                setGame.newGame()
             }
+            .padding(.top)
         }
         .font(.title)
         .padding()

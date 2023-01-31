@@ -44,7 +44,6 @@ struct Game {
             }
         } while dealtCards.count < Constats.dealtCards
         Self.deck = deck
-        print("Deck size after dealing of \(Constats.dealtCards): \(Self.deck.count) \n Dealt cards: \(dealtCards.count)")
         return dealtCards
     }
     
@@ -57,9 +56,7 @@ struct Game {
         } while Self.deck.count < Self.Constats.sizeOfDeck
         Self.cardsOnTheTable = initiallyDealtCards
         findTrueSet_()
-        if selectedCards.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
-        }
     }
     
     mutating func open3Cards() {
@@ -72,7 +69,6 @@ struct Game {
                 cardsOnTheTablePlusOpenedCards.append(card!)
             }
         } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + Constats.openedCards
-        print("Deck size after opening of 3 cards: \(Self.deck.count)")
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
         
         findTrueSet_()
