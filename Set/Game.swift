@@ -118,31 +118,35 @@ struct Game {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
             setToCompare = trueSet
             trueSet.removeAll()
-            return
         }
         if card.status == .default || card.status == .fromTrueSet {
             
             if selectedCards.count < 3 {
                 mark(card, with: .selected)
                 selectedCards.append(card)
-                
+
                 if !setToCompare.isEmpty, selectedCards.count == setToCompare.count {
-                    let difference = setToCompare.difference(from: selectedCards)
+                    var difference = [Card]()
+                    setToCompare.forEach({card in
+                        if let card = selectedCards.first(where: {$0.symbol != card.symbol && $0.quantityOfSymbols != card.quantityOfSymbols}) {
+                            difference.append(card)
+                        }
+                    })
                     print("difference: \(difference)")
-                    
+                     
                     if difference.isEmpty {
                         alert = .setIsRemoved
-                        setToCompare.forEach({ card in
-                            Self.deck.removeAll(where: {$0 == card})
-                            
+                        selectedCards.forEach({ card in
                             if let index = Self.cardsOnTheTable.firstIndex(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols}) {
                                 Self.cardsOnTheTable.remove(at: index)
                                 
                                 if let newCard = Self.deck.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
                                     Self.cardsOnTheTable.insert(newCard, at: index)
+                                    Self.deck.remove(at: Self.deck.firstIndex(of: newCard)!)
                                 }
                             }
                         })
+                        print("Self.deck.count: \(Self.deck.count)")
                         findTrueSet_()
                         if selectedCards.isEmpty {
                             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
@@ -150,6 +154,8 @@ struct Game {
                     } else {
                         alert = .itIsNotASet
                     }
+                } else if setToCompare.isEmpty {
+                    alert = .itIsNotASet
                 }
             } else {
                 selectedCards.forEach({mark($0, with: .default)})
@@ -227,14 +233,6 @@ struct Symbol: Equatable, Hashable {
         case stroked
         case filled
         case shaded
-    }
-}
-
-extension Array where Element: Hashable {
-    func difference(from other: [Element]) -> [Element] {
-        let thisSet = Set(self)
-        let otherSet = Set(other)
-        return Array(thisSet.symmetricDifference(otherSet))
     }
 }
 
