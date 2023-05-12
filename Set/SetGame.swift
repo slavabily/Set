@@ -9,13 +9,13 @@ import SwiftUI
 
 class SetGame: ObservableObject {
     
-    @discardableResult
-    private static func createGame() -> Game {
-        return Game()
-    }
+//    @discardableResult
+//    private static func createGame() -> Game {
+//        return Game()
+//    }
     
     @Published
-    private var game: Game = createGame()
+    private var game = Game()
     
     var cards: [Card] {
         Game.cardsOnTheTable
@@ -40,6 +40,10 @@ class SetGame: ObservableObject {
         game.alert == .open3MoreCards
     }
     
+    var defaultState: Bool {
+        game.alert == .default
+    }
+    
     // MARK: Actions
     
     func open3Cards() {
@@ -55,7 +59,6 @@ class SetGame: ObservableObject {
     }
     
     func newGame() {
-        objectWillChange.send()
-        Self.createGame()
+        game.newGame()
     }
 }

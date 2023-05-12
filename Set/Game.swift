@@ -9,7 +9,7 @@ import Foundation
 
 struct Game {
     
-    struct Constats {
+    struct Constants {
         static let sizeOfDeck = 24
         static let dealtCards = 12
         static let openedCards = 3
@@ -42,18 +42,19 @@ struct Game {
             if !dealtCards.contains(where: { $0 == dealtCard }) {
                 dealtCards.append(dealtCard!)
             }
-        } while dealtCards.count < Constats.dealtCards
+        } while dealtCards.count < Constants.dealtCards
         Self.deck = deck
         return dealtCards
     }
     
+    @discardableResult
     init() {
         repeat {
             let card = Card(symbol: Symbol())
             if !Self.deck.contains(where: { $0 == card }) {
                 Self.deck.append(card)
             }   
-        } while Self.deck.count < Self.Constats.sizeOfDeck
+        } while Self.deck.count < Self.Constants.sizeOfDeck
         Self.cardsOnTheTable = initiallyDealtCards
         findTrueSet_()
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
@@ -68,7 +69,7 @@ struct Game {
             if !cardsOnTheTablePlusOpenedCards.contains(where: { $0 == card }) {
                 cardsOnTheTablePlusOpenedCards.append(card!)
             }
-        } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + Constats.openedCards
+        } while cardsOnTheTablePlusOpenedCards.count < Self.cardsOnTheTable.count + Constants.openedCards
         Self.cardsOnTheTable = cardsOnTheTablePlusOpenedCards
         
         findTrueSet_()
@@ -85,6 +86,11 @@ struct Game {
         } else {
             alert = .open3MoreCards
         }
+    }
+    
+    mutating func newGame() {
+        Self.init()
+        alert = .default
     }
     
     
@@ -114,6 +120,7 @@ struct Game {
     }
     
     mutating func selectCard(_ card: Card) {
+        alert = .default
         if !trueSet.isEmpty {
             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
             setToCompare = trueSet
