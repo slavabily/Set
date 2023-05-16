@@ -7,22 +7,52 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct SetGameView: View {
     @ObservedObject var setGame: SetGame
     
     var body: some View {
-        VStack {
-            AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
-                CardView(card: card)
-                    .onTapGesture {
-                        setGame.selectCard(card)
-                    }
+        VStack{
+            game
+            HStack{
+                deck
+                Spacer()
+                discardPile
             }
-            buttons
-            AlertView(showingSetIsRemoved: setGame.showingSetIsRemoved,
-                      showingItIsNotSet: setGame.showingItIsNotSet,
-                      showingOpen3MoreCards: setGame.showingOpen3MoreCards)
+            .padding(.horizontal, 40)
+            VStack {
+                buttons
+                AlertView(showingSetIsRemoved: setGame.showingSetIsRemoved,
+                          showingItIsNotSet: setGame.showingItIsNotSet,
+                          showingOpen3MoreCards: setGame.showingOpen3MoreCards)
+            }
         }
+    }
+    
+    var game: some View {
+        AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
+            CardView(card: card)
+                .onTapGesture {
+                    setGame.selectCard(card)
+                }
+        }
+    }
+    
+    var deck: some View {
+        ZStack {
+            ForEach(setGame.deck, id: \.self) { card in
+                CardView(card: card)
+            }
+        }
+        .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)
+    }
+    
+    var discardPile: some View {
+        ZStack {
+            ForEach(setGame.discardedPile, id: \.self) { card in
+                CardView(card: card)
+            }
+        }
+        .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)
     }
     
     var buttons: some View {
@@ -41,10 +71,16 @@ struct ContentView: View {
             Button("New Game") {
                 setGame.newGame()
             }
-            .padding(.top)
+            .padding(.top, 5)
         }
         .font(.title)
         .padding()
+    }
+    
+    private struct CardConstants {
+        static let aspectRatio: CGFloat = 2/3
+        static let deckHeight: CGFloat = 120
+        static let deckWidth: CGFloat = deckHeight * aspectRatio
     }
 }
 
@@ -202,8 +238,10 @@ struct CardView: View {
 
 
 
+
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(setGame: SetGame())
+        SetGameView(setGame: SetGame())
     }
 }

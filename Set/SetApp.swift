@@ -15,7 +15,7 @@ struct SetApp: App {
     var body: some Scene {
         
         WindowGroup {
-            ContentView(setGame: game)
+            SetGameView(setGame: game)
         }
     }
 }

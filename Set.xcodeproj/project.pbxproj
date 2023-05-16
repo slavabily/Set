@@ -11,7 +11,7 @@
 		B943754C2918257A004B624B /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B943754B2918257A004B624B /* Game.swift */; };
 		B9468AE22902C0C300D31DDF /* SetGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9468AE12902C0C300D31DDF /* SetGame.swift */; };
 		B98BB8002901651700816385 /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BB7FF2901651700816385 /* SetApp.swift */; };
-		B98BB8022901651700816385 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BB8012901651700816385 /* ContentView.swift */; };
+		B98BB8022901651700816385 /* SetGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BB8012901651700816385 /* SetGameView.swift */; };
 		B98BB8042901651800816385 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B98BB8032901651800816385 /* Assets.xcassets */; };
 		B98BB8072901651800816385 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B98BB8062901651800816385 /* Preview Assets.xcassets */; };
 		B9A3F4C629026E1900536F69 /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A3F4C529026E1900536F69 /* Diamond.swift */; };
@@ -23,7 +23,7 @@
 		B9468AE12902C0C300D31DDF /* SetGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGame.swift; sourceTree = "<group>"; };
 		B98BB7FC2901651700816385 /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B98BB7FF2901651700816385 /* SetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetApp.swift; sourceTree = "<group>"; };
-		B98BB8012901651700816385 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B98BB8012901651700816385 /* SetGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameView.swift; sourceTree = "<group>"; };
 		B98BB8032901651800816385 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B98BB8062901651800816385 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B9A3F4C529026E1900536F69 /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				B98BB7FF2901651700816385 /* SetApp.swift */,
-				B98BB8012901651700816385 /* ContentView.swift */,
+				B98BB8012901651700816385 /* SetGameView.swift */,
 				B9A3F4C529026E1900536F69 /* Diamond.swift */,
 				B9468AE12902C0C300D31DDF /* SetGame.swift */,
 				B943754B2918257A004B624B /* Game.swift */,
@@ -152,7 +152,7 @@
 				B9A3F4C629026E1900536F69 /* Diamond.swift in Sources */,
 				B943754C2918257A004B624B /* Game.swift in Sources */,
 				B91E05552940F9CF00CE5AE1 /* AspectVGrid.swift in Sources */,
-				B98BB8022901651700816385 /* ContentView.swift in Sources */,
+				B98BB8022901651700816385 /* SetGameView.swift in Sources */,
 				B9468AE22902C0C300D31DDF /* SetGame.swift in Sources */,
 				B98BB8002901651700816385 /* SetApp.swift in Sources */,
 			);

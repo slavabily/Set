@@ -25,6 +25,7 @@ struct Game {
     private(set) var alert: Alert = .default
     private(set) static var deck = [Card]()
     private(set) static var cardsOnTheTable = [Card]()
+    private(set) static var discardedCards = [Card]()
     private var trueSet = [Card]()
     private var setToCompare = [Card]()
     private var selectedCards = [Card]()
@@ -53,11 +54,12 @@ struct Game {
             let card = Card(symbol: Symbol())
             if !Self.deck.contains(where: { $0 == card }) {
                 Self.deck.append(card)
-            }   
+            }
         } while Self.deck.count < Self.Constants.sizeOfDeck
         Self.cardsOnTheTable = initiallyDealtCards
         findTrueSet_()
-            Self.cardsOnTheTable.forEach({mark($0, with: .default)})
+        Self.cardsOnTheTable.forEach({mark($0, with: .default)})
+        Self.discardedCards.removeAll()
     }
     
     mutating func open3Cards() {
@@ -143,16 +145,21 @@ struct Game {
                      
                     if difference.isEmpty {
                         alert = .setIsRemoved
-                        selectedCards.forEach({ card in
+                        selectedCards.forEach { card in
                             if let index = Self.cardsOnTheTable.firstIndex(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols}) {
                                 Self.cardsOnTheTable.remove(at: index)
                                 
-                                if let newCard = Self.deck.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
-                                    Self.cardsOnTheTable.insert(newCard, at: index)
-                                    Self.deck.remove(at: Self.deck.firstIndex(of: newCard)!)
-                                }
+                                //  2) : leaving fewer cards on the table
+                                
+//                                if let newCard = Self.deck.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
+//                                    Self.cardsOnTheTable.insert(newCard, at: index)
+//                                    Self.deck.remove(at: Self.deck.firstIndex(of: newCard)!)
+//                                }
+                                
+                                // Adding removed cards to 'discardedCards'
+                                Self.discardedCards.append(card)
                             }
-                        })
+                        }
                         print("Self.deck.count: \(Self.deck.count)")
                         findTrueSet_()
                         if selectedCards.isEmpty {
