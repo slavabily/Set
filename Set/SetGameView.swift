@@ -40,7 +40,12 @@ struct SetGameView: View {
     var deck: some View {
         ZStack {
             ForEach(setGame.deck, id: \.self) { card in
-                CardView(card: card)
+                GeometryReader { geometry in
+                    CardView(card: card)
+                    RoundedRectangle(cornerRadius: geometry.size.width/5)
+                        .fill(.red)
+                }
+                
             }
         }
         .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)
@@ -79,7 +84,7 @@ struct SetGameView: View {
     
     private struct CardConstants {
         static let aspectRatio: CGFloat = 2/3
-        static let deckHeight: CGFloat = 120
+        static let deckHeight: CGFloat = 100
         static let deckWidth: CGFloat = deckHeight * aspectRatio
     }
 }
@@ -187,7 +192,7 @@ struct CardView: View {
     func aspect<T: View>(_ s: T) -> some View {
         return s
             .aspectRatio(4/2, contentMode: .fit)
-            .scaleEffect(0.8)
+            .scaleEffect(0.7)
     }
     
     @ViewBuilder

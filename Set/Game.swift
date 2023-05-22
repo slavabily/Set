@@ -149,7 +149,7 @@ struct Game {
                             if let index = Self.cardsOnTheTable.firstIndex(where: {$0.symbol == card.symbol && $0.quantityOfSymbols == card.quantityOfSymbols}) {
                                 Self.cardsOnTheTable.remove(at: index)
                                 
-                                //  2) : leaving fewer cards on the table
+                                //  2) : Leaving fewer cards on the table
                                 
 //                                if let newCard = Self.deck.randomElement(), !Self.cardsOnTheTable.contains(where: {$0 == newCard}) {
 //                                    Self.cardsOnTheTable.insert(newCard, at: index)
