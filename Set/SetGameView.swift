@@ -11,6 +11,7 @@ struct SetGameView: View {
     @ObservedObject var setGame: SetGame
     
     @Namespace private var discardingNamespace
+    @Namespace private var dealingNamespace
     
     var body: some View {
         VStack{
@@ -34,6 +35,7 @@ struct SetGameView: View {
         AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
             CardView(card: card)
                 .matchedGeometryEffect(id: card.self, in: discardingNamespace)
+                .matchedGeometryEffect(id: card.self, in: dealingNamespace)
                 .transition(.asymmetric(insertion: .opacity.animation(.linear(duration: 0)), removal: .identity))
                 .onTapGesture {
                     withAnimation(.linear(duration: 1)) {
@@ -47,13 +49,22 @@ struct SetGameView: View {
         ZStack {
             ForEach(setGame.deck, id: \.self) { card in
                 GeometryReader { geometry in
-                    CardView(card: card)
-                    RoundedRectangle(cornerRadius: geometry.size.width/5)
-                        .fill(.red)
+                    Group {
+                        CardView(card: card)
+                        RoundedRectangle(cornerRadius: geometry.size.width/5)
+                            .fill(.red)
+                    }
+                    .matchedGeometryEffect(id: card.self, in: dealingNamespace)
+                    .transition(.identity)
                 }
             }
         }
         .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)
+        .onTapGesture {
+            withAnimation(.linear(duration: 2)) {
+                setGame.open3Cards()
+            }
+        }
     }
     
     var discardPile: some View {
@@ -70,11 +81,6 @@ struct SetGameView: View {
     var buttons: some View {
         VStack {
             HStack {
-                if setGame.deck.count > 0 {
-                    Button("Open 3 Cards") {
-                        setGame.open3Cards()
-                    }
-                }
                 Spacer()
                 Button("Find Set") {
                     setGame.findTrueSet()
