@@ -10,6 +10,8 @@ import SwiftUI
 struct SetGameView: View {
     @ObservedObject var setGame: SetGame
     
+    @Namespace private var discardingNamespace
+    
     var body: some View {
         VStack{
             game
@@ -31,8 +33,12 @@ struct SetGameView: View {
     var game: some View {
         AspectVGrid(items: setGame.cards, aspectRatio: 2/3) { card in
             CardView(card: card)
+                .matchedGeometryEffect(id: card.self, in: discardingNamespace)
+                .transition(.asymmetric(insertion: .opacity.animation(.linear(duration: 0)), removal: .identity))
                 .onTapGesture {
-                    setGame.selectCard(card)
+                    withAnimation(.linear(duration: 1)) {
+                        setGame.selectCard(card)
+                    }
                 }
         }
     }
@@ -45,7 +51,6 @@ struct SetGameView: View {
                     RoundedRectangle(cornerRadius: geometry.size.width/5)
                         .fill(.red)
                 }
-                
             }
         }
         .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)
@@ -55,6 +60,8 @@ struct SetGameView: View {
         ZStack {
             ForEach(setGame.discardedPile, id: \.self) { card in
                 CardView(card: card)
+                    .matchedGeometryEffect(id: card.self, in: discardingNamespace)
+                    .transition(.asymmetric(insertion: .identity, removal: .opacity.animation(.linear(duration: 0))))
             }
         }
         .frame(width: CardConstants.deckWidth, height: CardConstants.deckHeight)

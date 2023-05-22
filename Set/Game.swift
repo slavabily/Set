@@ -141,8 +141,6 @@ struct Game {
                             difference.append(card)
                         }
                     })
-                    print("difference: \(difference)")
-                     
                     if difference.isEmpty {
                         alert = .setIsRemoved
                         selectedCards.forEach { card in
@@ -160,7 +158,6 @@ struct Game {
                                 Self.discardedCards.append(card)
                             }
                         }
-                        print("Self.deck.count: \(Self.deck.count)")
                         findTrueSet_()
                         if selectedCards.isEmpty {
                             Self.cardsOnTheTable.forEach({mark($0, with: .default)})
